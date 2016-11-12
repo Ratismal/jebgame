@@ -34,10 +34,20 @@ var konamiIndex = 0;
 
 var music = [{
     name: 'Brain Power - NOMA',
+    artist: 'NOMA',
     url: 'music/brainpower.mp3'
 }, {
     name: 'Snow Halation',
+    artist: 'μ\'s',
     url: 'music/snowhalation.mp3'
+}, {
+    name: 'Bring Me To Life',
+    artist: 'Evanescence',
+    url: 'music/bringmetolife.mp3'
+}, {
+    name: 'Never Gonna Give You Up',
+    artist: 'Rick Astley',
+    url: 'music/rolls.mp3'
 }]
 
 var sfx = {
@@ -121,18 +131,23 @@ function draw() {
 
     ctx.fillText('Kidnapped Rhinos: ' + rhinoCount, 5, 50);
     ctx.fillText('Current Song: ' + music[currentSong].name, 5, 100);
-    ctx.fillText('Survived for ' + (Math.floor(moment.duration(moment() - startTime).asSeconds() * 10) / 10) + 's', 5, 150);
+    ctx.font = "30px Comic Sans MS";
+    ctx.fillText(music[currentSong].artist, 347, 140);
+
+    ctx.font = "50px Comic Sans MS";  
+    
+    ctx.fillText('Survived for ' + (Math.floor(moment.duration(moment() - startTime).asSeconds() * 10) / 10) + 's', 5, 200);
     if (godMode) {
         ctx.fillStyle = 'red';
-        ctx.fillText('JEB IS A GOD', 5, 200);
+        ctx.fillText('JEB IS A GOD', 5, 250);
 
         ctx.fillStyle = 'black';
     }
     if (debugMode) {
-        ctx.fillText('Rhinos In Existence: ' + entities.length, 5, 250)
-        ctx.fillText('Timer: ' + timer, 5, 300)
-        ctx.fillText('Rhino Spawn Rate: ' + ((rhinoSpawnRate + (timer / 5000))).toFixed(2), 5, 350)
-        ctx.fillText('Enemy Spawn Rate: ' + ((enemySpawnRate + (timer / 4000))).toFixed(2), 5, 400)
+        ctx.fillText('Rhinos In Existence: ' + entities.length, 5, 300)
+        ctx.fillText('Timer: ' + timer, 5, 350)
+        ctx.fillText('Rhino Spawn Rate: ' + ((rhinoSpawnRate + (timer / 5000))).toFixed(2), 5, 400)
+        ctx.fillText('Enemy Spawn Rate: ' + ((enemySpawnRate + (timer / 4000))).toFixed(2), 5, 450)
         
     };
 }
