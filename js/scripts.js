@@ -134,7 +134,8 @@ function playSong() {
         if (music.length == 1) {
             audio.play(music[0].url);
         } else {
-            currentSong = getRandomInt(0, music.length - 1);
+            var oldSong = currentSong;
+            while (oldSong == currentSong) currentSong = getRandomInt(0, music.length - 1);
             audio.play(music[currentSong].url);
         }
     } else {
