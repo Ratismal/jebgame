@@ -31,8 +31,8 @@ function update() {
         document.location.reload();
     }
     if (getRandomInt(0, 100 + (timer / 1000)) == 10) spawnRhino();
-    if (timer > 300) {
-        if (getRandomInt(0, 1000 + (timer / 2000)) == 10) spawnEnemy();
+    if (timer > 3000) {
+        if (getRandomInt(0, 500 + (timer / 800)) == 10) spawnEnemy();
     }
     jeb.update();
     //   console.log('Jeb: ', 'x1', jeb.x, 'y1', jeb.y, 'x2', jeb.x + jeb.width, 'y2', jeb.y + jeb.height)
@@ -70,7 +70,11 @@ function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.fillText('Kidnapped Rhinos: ' + rhinoCount, 5, 50);
 
-    if (debugMode) ctx.fillText('Rhinos In Existence: ' + entities.length, 5, 100);
+    if (debugMode) {
+        ctx.fillText('Rhinos In Existence: ' + entities.length, 5, 100)
+        ctx.fillText('Timer: ' + timer, 5, 150)
+        
+    };
     if (ouchCount > 0) {
         ctx.font = "80px Comic Sans MS";
 
@@ -245,7 +249,7 @@ class Rhino extends GameObject {
 
 class Enemy extends GameObject {
     constructor(x, y, width, height, dx, dy, img) {
-        if (!dy) dy = 1 + (getRandomInt(-10, 10) / 20);
+        if (!dy) dy = 1 + (getRandomInt(-20, 40) / 20);
         if (!dx) dx = 0;
         if (!width) width = rhinoRadius + getRandomInt(-10, 10);
         if (!height) height = rhinoRadius + getRandomInt(-10, 10);
