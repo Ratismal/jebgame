@@ -91,9 +91,6 @@ function draw() {
     ctx.font = "50px Comic Sans MS";
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.fillText('Kidnapped Rhinos: ' + rhinoCount, 5, 50);
-    ctx.fillText('Current Song: ' + music[currentSong].name, 5, 100);
-    ctx.fillText('Survived for ' + (Math.floor(moment.duration(moment() - startTime).asSeconds() * 10) / 10) + 's', 5, 150);
 
 
     if (debugMode) {
@@ -113,6 +110,9 @@ function draw() {
         ctx.drawImage(imgLife, canvas.width - (i * 120 + 120), 15, 100, 100);
     }
     jeb.draw();
+    ctx.fillText('Kidnapped Rhinos: ' + rhinoCount, 5, 50);
+    ctx.fillText('Current Song: ' + music[currentSong].name, 5, 100);
+    ctx.fillText('Survived for ' + (Math.floor(moment.duration(moment() - startTime).asSeconds() * 10) / 10) + 's', 5, 150);
 
 }
 
@@ -164,7 +164,7 @@ function init() {
 }
 
 function start() {
-    startTime = moment();    
+    startTime = moment();
     currentSong = getRandomInt(0, music.length - 1);
     var song = music[currentSong];
     audio.src = song.url
