@@ -299,8 +299,8 @@ class Rhino extends GameObject {
         //
         if (!dy) dy = 2 + (getRandomInt(-10, 10) / 20);
         if (!dx) dx = 0;
-        if (!width) width = rhinoRadius + getRandomInt(-10, 10);
-        if (!height) height = rhinoRadius + getRandomInt(-10, 10);
+        if (!width) width = rhinoRadius + getRandomInt(-20, 20);
+        if (!height) height = rhinoRadius + getRandomInt(-20, 20);
         if (!img) img = imgRhino;
         if (!x) x = getRandomInt(0 + width, canvas.width - width);
         if (!y) y = -50;
