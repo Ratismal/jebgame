@@ -24,14 +24,13 @@ var isStarted = false;
 var interval;
 var startTime;
 var audio;
-var audioBoop;
-var audioOuch
 var godMode = false;
 
 var rhinoSpawnRate = 100;
 var enemySpawnRate = 500;
 
-
+const konami = [38, 38, 40, 40, 37, 39, 37, 39, 66, 65, 13];
+var konamiIndex = 0;
 
 var music = [{
     name: 'Brain Power - NOMA',
@@ -46,6 +45,15 @@ var sfx = {
     ouch: 'music/ouch.ogg'
 }
 var currentSong;
+
+var context;
+var bufferLoader;
+var bufferList;
+
+var Buffers = {
+    OUCH: 0,
+    BOOP: 1
+}
 
 function update() {
     // if (lives > 3) lives = 0;
@@ -70,13 +78,13 @@ function update() {
             if (entities[i] instanceof Rhino) {
                 rhinoCount++;
                 entities.splice(i, 1);
-                audioBoop.play()
+                playSound(Buffers.BOOP, 0)
             } else if (entities[i] instanceof Enemy) {
                 if (!godMode)
                     lives--;
                 entities.splice(i, 1);
                 ouchCount = 100;
-                audioOuch.play()
+                playSound(Buffers.OUCH, 0)
             }
         }
     }
@@ -96,12 +104,6 @@ function draw() {
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-
-    if (debugMode) {
-        ctx.fillText('Rhinos In Existence: ' + entities.length, 5, 200)
-        ctx.fillText('Timer: ' + timer, 5, 250)
-
-    };
     if (ouchCount > 0) {
         ctx.font = "80px Comic Sans MS";
 
@@ -115,11 +117,20 @@ function draw() {
     }
     jeb.draw();
     ctx.font = "50px Comic Sans MS";
-    
+
     ctx.fillText('Kidnapped Rhinos: ' + rhinoCount, 5, 50);
     ctx.fillText('Current Song: ' + music[currentSong].name, 5, 100);
     ctx.fillText('Survived for ' + (Math.floor(moment.duration(moment() - startTime).asSeconds() * 10) / 10) + 's', 5, 150);
+    if (godMode) {
+        ctx.fillStyle = 'red';
+        ctx.fillText('JEB IS A GOD', 5, 200);
 
+        ctx.fillStyle = 'black';
+    }
+    if (debugMode) {
+        ctx.fillText('Rhinos In Existence: ' + entities.length, 5, 250)
+        ctx.fillText('Timer: ' + timer, 5, 300)
+    };
 }
 
 function checkPosition() {
@@ -151,12 +162,12 @@ function playSong() {
 }
 
 function init() {
+
+
     canvas = document.getElementById("jebGame");
     var div = document.getElementById("canvas");
     audio = document.getElementById('audio');
     audioSfx = document.getElementById('audioSfx');
-    audioBoop = document.getElementById('audioBoop');
-    audioOuch = document.getElementById('audioOuch');
     audio.addEventListener('ended', playSong);
     canvas.width = div.clientWidth;
     canvas.height = div.clientHeight;
@@ -169,6 +180,8 @@ function init() {
     ctx.fillText('Get as many as you can, but don\'t get caught by b1nzy!', 40, 150);
     ctx.fillText('Press \'enter\' to begin.', 40, 200);
     jeb = new Jeb();
+
+    initAudio();
 }
 
 function start() {
@@ -207,6 +220,16 @@ function gameOver() {
 }
 
 function keyDownHandler(e) {
+    console.log(e.keyCode);
+    if (e.keyCode == konami[konamiIndex]) {
+        konamiIndex++;
+        console.log('konami is now at ', konamiIndex)
+    } else konamiIndex = 0;
+
+    if (konamiIndex == konami.length) {
+        godMode = !godMode;
+        playSound(Buffers.BOOP, 0);
+    }
     if (e.keyCode == 13 && !isStarted) {
         isStarted = true;
         start();
@@ -345,4 +368,78 @@ class Enemy extends GameObject {
         super.draw();
     }
 
+}
+
+function initAudio() {
+    window.AudioContext = window.AudioContext || window.webkitAudioContext;
+    context = new AudioContext();
+
+    bufferLoader = new BufferLoader(
+        context, [
+            'music/ouch.ogg',
+            'music/boop.ogg',
+        ],
+        finishedLoading
+    );
+
+    bufferLoader.load();
+}
+
+
+function finishedLoading(bList) {
+    bufferList = bList;
+}
+
+function playSound(id, time) {
+    var source = context.createBufferSource();
+    source.buffer = bufferList[id];
+    source.connect(context.destination);
+    source.start(time);
+}
+
+function BufferLoader(context, urlList, callback) {
+    this.context = context;
+    this.urlList = urlList;
+    this.onload = callback;
+    this.bufferList = new Array();
+    this.loadCount = 0;
+}
+
+BufferLoader.prototype.loadBuffer = function (url, index) {
+    // Load buffer asynchronously
+    var request = new XMLHttpRequest();
+    request.open("GET", url, true);
+    request.responseType = "arraybuffer";
+
+    var loader = this;
+
+    request.onload = function () {
+        // Asynchronously decode the audio file data in request.response
+        loader.context.decodeAudioData(
+            request.response,
+            function (buffer) {
+                if (!buffer) {
+                    alert('error decoding file data: ' + url);
+                    return;
+                }
+                loader.bufferList[index] = buffer;
+                if (++loader.loadCount == loader.urlList.length)
+                    loader.onload(loader.bufferList);
+            },
+            function (error) {
+                console.error('decodeAudioData error', error);
+            }
+        );
+    }
+
+    request.onerror = function () {
+        alert('BufferLoader: XHR error');
+    }
+
+    request.send();
+}
+
+BufferLoader.prototype.load = function () {
+    for (var i = 0; i < this.urlList.length; ++i)
+        this.loadBuffer(this.urlList[i], i);
 }
