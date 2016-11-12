@@ -14,7 +14,7 @@ var rhinoCount = 0;
 
 var rightPressed = false;
 var leftPressed = false;
-var debugMode = true;
+var debugMode = false;
 
 var timer = 0;
 var ouchCount = 0;
@@ -22,9 +22,10 @@ var ouchCount = 0;
 var isStarted = false;
 
 var interval;
-
+var startTime;
 var audio;
 var audioSfx;
+var godMode = false;
 var music = [{
     name: 'Brain Power - NOMA',
     url: 'music/brainpower.mp3'
@@ -65,7 +66,8 @@ function update() {
                 audioSfx.src = sfx.boop;
                 audioSfx.play();
             } else if (entities[i] instanceof Enemy) {
-                lives--;
+                if (!godMode)
+                    lives--;
                 entities.splice(i, 1);
                 ouchCount = 100;
                 audioSfx.src = sfx.ouch;
@@ -91,11 +93,12 @@ function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.fillText('Kidnapped Rhinos: ' + rhinoCount, 5, 50);
     ctx.fillText('Current Song: ' + music[currentSong].name, 5, 100);
+    ctx.fillText('Survived for ' + (Math.floor(moment.duration(moment() - startTime).asSeconds() * 10) / 10) + 's', 5, 150);
 
 
     if (debugMode) {
-        ctx.fillText('Rhinos In Existence: ' + entities.length, 5, 150)
-        ctx.fillText('Timer: ' + timer, 5, 200)
+        ctx.fillText('Rhinos In Existence: ' + entities.length, 5, 200)
+        ctx.fillText('Timer: ' + timer, 5, 250)
 
     };
     if (ouchCount > 0) {
@@ -110,9 +113,6 @@ function draw() {
         ctx.drawImage(imgLife, canvas.width - (i * 120 + 120), 15, 100, 100);
     }
     jeb.draw();
-
-    ctx.strokeRect(0, 0, 50, 50)
-    ctx.strokeRect(0, 50, 50, 50)
 
 }
 
@@ -143,6 +143,7 @@ function playSong() {
 }
 
 function init() {
+    startTime = moment();
     canvas = document.getElementById("jebGame");
     var div = document.getElementById("canvas");
     audio = document.getElementById('audio');
