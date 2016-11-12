@@ -26,6 +26,10 @@ var startTime;
 var audio;
 var audioSfx;
 var godMode = false;
+
+var rhinoSpawnRate = 100;
+var enemySpawnRate = 500;
+
 var music = [{
     name: 'Brain Power - NOMA',
     url: 'music/brainpower.mp3'
@@ -48,9 +52,9 @@ function update() {
     if (lives <= 0) {
         gameOver();
     }
-    if (getRandomInt(0, 100 + (timer / 5000)) >= 100) spawnRhino();
+    if (getRandomInt(0, rhinoSpawnRate + (timer / 5000)) >= rhinoSpawnRate) spawnRhino();
     if (timer > 3000) {
-        if (getRandomInt(0, 500 + (timer / 4000)) >= 500) spawnEnemy();
+        if (getRandomInt(0, enemySpawnRate + (timer / 4000)) >= enemySpawnRate) spawnEnemy();
     }
     jeb.update();
     //   console.log('Jeb: ', 'x1', jeb.x, 'y1', jeb.y, 'x2', jeb.x + jeb.width, 'y2', jeb.y + jeb.height)
