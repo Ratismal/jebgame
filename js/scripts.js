@@ -145,7 +145,6 @@ function playSong() {
 }
 
 function init() {
-    startTime = moment();
     canvas = document.getElementById("jebGame");
     var div = document.getElementById("canvas");
     audio = document.getElementById('audio');
@@ -165,6 +164,7 @@ function init() {
 }
 
 function start() {
+    startTime = moment();    
     currentSong = getRandomInt(0, music.length - 1);
     var song = music[currentSong];
     audio.src = song.url
