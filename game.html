@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>Gamedev Canvas Workshop</title>
+    <style>
+        body,
+        html {
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
+        }
+        
+        * {
+            padding: 0;
+            margin: 0;
+        }
+        canvas {
+            margin: 0;
+            padding: 0;
+        }
+        #canvas {
+            height: 100%;
+            width: 100%;
+            background-image: url('/img/background.png')
+        }
+        
+        #resources,
+        .resource {
+            display: none !important;
+        }
+    </style>
+    <script src="/js/scripts.js"></script>
+</head>
+
+<body>
+
+    <div id='canvas'>
+        <canvas id="jebGame"></canvas>
+    </div>
+
+
+    <div id='resources'>
+        <img id='imgJeb' class='resource' src='/img/jeb.png'></div>
+    <img id='imgRhino' class='resource' src='/img/rhino.png'></div>
+    <img id='imgLife' class='resource' src='/img/thonkang.png'></div>
+    <img id='imgEnemy' class='resource' src='/img/hammer.png'></div>
+
+    </div>
+    <script>
+	init()
+</script>
+
+</body>
+
+</html>
