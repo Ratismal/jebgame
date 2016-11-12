@@ -24,11 +24,14 @@ var isStarted = false;
 var interval;
 var startTime;
 var audio;
-var audioSfx;
+var audioBoop;
+var audioOuch
 var godMode = false;
 
 var rhinoSpawnRate = 100;
 var enemySpawnRate = 500;
+
+
 
 var music = [{
     name: 'Brain Power - NOMA',
@@ -67,15 +70,13 @@ function update() {
             if (entities[i] instanceof Rhino) {
                 rhinoCount++;
                 entities.splice(i, 1);
-                audioSfx.src = sfx.boop;
-                audioSfx.play();
+                audioBoop.play()
             } else if (entities[i] instanceof Enemy) {
                 if (!godMode)
                     lives--;
                 entities.splice(i, 1);
                 ouchCount = 100;
-                audioSfx.src = sfx.ouch;
-                audioSfx.play();
+                audioOuch.play()
             }
         }
     }
@@ -92,7 +93,6 @@ function update() {
 }
 
 function draw() {
-    ctx.font = "50px Comic Sans MS";
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -114,6 +114,8 @@ function draw() {
         ctx.drawImage(imgLife, canvas.width - (i * 120 + 120), 15, 100, 100);
     }
     jeb.draw();
+    ctx.font = "50px Comic Sans MS";
+    
     ctx.fillText('Kidnapped Rhinos: ' + rhinoCount, 5, 50);
     ctx.fillText('Current Song: ' + music[currentSong].name, 5, 100);
     ctx.fillText('Survived for ' + (Math.floor(moment.duration(moment() - startTime).asSeconds() * 10) / 10) + 's', 5, 150);
@@ -153,6 +155,8 @@ function init() {
     var div = document.getElementById("canvas");
     audio = document.getElementById('audio');
     audioSfx = document.getElementById('audioSfx');
+    audioBoop = document.getElementById('audioBoop');
+    audioOuch = document.getElementById('audioOuch');
     audio.addEventListener('ended', playSong);
     canvas.width = div.clientWidth;
     canvas.height = div.clientHeight;
