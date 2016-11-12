@@ -29,7 +29,7 @@ var godMode = false;
 var rhinoSpawnRate = 100;
 var enemySpawnRate = 500;
 
-const konami = [38, 38, 40, 40, 37, 39, 37, 39, 66, 65, 13];
+const konami = [38, 38, 40, 40, 37, 39, 37, 39, 66, 65];
 var konamiIndex = 0;
 
 var music = [{
@@ -221,14 +221,25 @@ function gameOver() {
 }
 
 function keyDownHandler(e) {
+    console.log(e.keyCode)
+    if (konamiIndex == konami.length) {
+        switch (e.keyCode) {
+            case 13:
+                godMode = !godMode;
+                playSound(Buffers.TADA, 0);
+                break;
+            case 27:
+                debugMode = !debugMode;
+                playSound(Buffers.TADA, 0);                
+                break;
+        }
+
+    }
     if (e.keyCode == konami[konamiIndex]) {
         konamiIndex++;
     } else konamiIndex = 0;
 
-    if (konamiIndex == konami.length) {
-        godMode = !godMode;
-        playSound(Buffers.TADA, 0);
-    }
+
     if (e.keyCode == 13 && !isStarted) {
         isStarted = true;
         start();
