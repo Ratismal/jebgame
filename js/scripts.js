@@ -136,7 +136,8 @@ function playSong() {
         } else {
             var oldSong = currentSong;
             while (oldSong == currentSong) currentSong = getRandomInt(0, music.length - 1);
-            audio.play(music[currentSong].url);
+            audio.src = music[currentSong].url
+            audio.play();
         }
     } else {
         audio.play('music/violin.mp3');
