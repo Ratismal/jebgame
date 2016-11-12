@@ -21,19 +21,35 @@ var ouchCount = 0;
 
 var isStarted = false;
 
+var interval;
+
+var audio;
+var audioSfx;
+var music = [{
+    name: 'Brain Power - NOMA',
+    url: 'music/brainpower.mp3'
+}, {
+    name: 'Snow Halation',
+    url: 'music/snowhalation.mp3'
+}]
+
+var sfx = {
+    boop: 'music/boop.ogg',
+    ouch: 'music/ouch.ogg'
+}
+var currentSong;
+
 function update() {
-    if (lives > 3) lives = 0;
+    // if (lives > 3) lives = 0;
     timer++;
     if (ouchCount > 0) ouchCount--;
 
-    if (lives == 0) {
-        lives--;
-        alert("It looks like you weren't enerJEBic enough.");
-        document.location.reload();
+    if (lives <= 0) {
+        gameOver();
     }
-    if (getRandomInt(0, 100 + (timer / 1000)) == 10) spawnRhino();
+    if (getRandomInt(0, 100 + (timer / 5000)) >= 100) spawnRhino();
     if (timer > 3000) {
-        if (getRandomInt(0, 500 + (timer / 800)) == 10) spawnEnemy();
+        if (getRandomInt(0, 500 + (timer / 4000)) >= 500) spawnEnemy();
     }
     jeb.update();
     //   console.log('Jeb: ', 'x1', jeb.x, 'y1', jeb.y, 'x2', jeb.x + jeb.width, 'y2', jeb.y + jeb.height)
@@ -46,10 +62,14 @@ function update() {
             if (entities[i] instanceof Rhino) {
                 rhinoCount++;
                 entities.splice(i, 1);
+                audioSfx.src = sfx.boop;
+                audioSfx.play();
             } else if (entities[i] instanceof Enemy) {
                 lives--;
                 entities.splice(i, 1);
                 ouchCount = 100;
+                audioSfx.src = sfx.ouch;
+                audioSfx.play();
             }
         }
     }
@@ -70,11 +90,13 @@ function draw() {
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.fillText('Kidnapped Rhinos: ' + rhinoCount, 5, 50);
+    ctx.fillText('Current Song: ' + music[currentSong].name, 5, 100);
+
 
     if (debugMode) {
-        ctx.fillText('Rhinos In Existence: ' + entities.length, 5, 100)
-        ctx.fillText('Timer: ' + timer, 5, 150)
-        
+        ctx.fillText('Rhinos In Existence: ' + entities.length, 5, 150)
+        ctx.fillText('Timer: ' + timer, 5, 200)
+
     };
     if (ouchCount > 0) {
         ctx.font = "80px Comic Sans MS";
@@ -107,9 +129,25 @@ function checkPosition() {
     }
 }
 
+function playSong() {
+    if (isStarted) {
+        if (music.length == 1) {
+            audio.play(music[0].url);
+        } else {
+            currentSong = getRandomInt(0, music.length - 1);
+            audio.play(music[currentSong].url);
+        }
+    } else {
+        audio.play('music/violin.mp3');
+    }
+}
+
 function init() {
     canvas = document.getElementById("jebGame");
     var div = document.getElementById("canvas");
+    audio = document.getElementById('audio');
+    audioSfx = document.getElementById('audioSfx');
+    audio.addEventListener('ended', playSong);
     canvas.width = div.clientWidth;
     canvas.height = div.clientHeight;
     ctx = canvas.getContext("2d");
@@ -120,13 +158,41 @@ function init() {
     ctx.fillText('You have an insatiable rhino addiction.', 40, 100);
     ctx.fillText('Get as many as you can, but don\'t get caught by b1nzy!', 40, 150);
     ctx.fillText('Press \'enter\' to begin.', 40, 200);
-
+    jeb = new Jeb();
 }
 
 function start() {
-    jeb = new Jeb();
-    setInterval(update, 10);
+    currentSong = getRandomInt(0, music.length - 1);
+    var song = music[currentSong];
+    audio.src = song.url
+    songTitle = song.name
+    audio.volume = 0.2
+    audio.play();
+    lives = 3;
+    timer = 0;
+    interval = setInterval(update, 10);
     spawnRhino();
+
+}
+
+function gameOver() {
+    audio.src = 'music/violin.mp3'
+    audio.play();
+    clearInterval(interval);
+    setTimeout(function () {
+        ctx.fillText('Uh oh!', jeb.x + jeb.width, jeb.y - jeb.height)
+    }, 40)
+    setTimeout(function () {
+        entities = [];
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.font = "30px Comic Sans MS";
+
+        ctx.fillText('It looks like you weren\'t enerJEBic enough.', 40, 100)
+        ctx.fillText('Press \'enter\' to try again.', 40, 200);
+
+        isStarted = false;
+    }, 1000)
+
 }
 
 function keyDownHandler(e) {
@@ -250,7 +316,7 @@ class Rhino extends GameObject {
 
 class Enemy extends GameObject {
     constructor(x, y, width, height, dx, dy, img) {
-        if (!dy) dy = 1 + (getRandomInt(-20, 40) / 20);
+        if (!dy) dy = 1 + (getRandomInt(-20, 40) / 20) + (timer / 10000);
         if (!dx) dx = 0;
         if (!width) width = rhinoRadius + getRandomInt(-10, 10);
         if (!height) height = rhinoRadius + getRandomInt(-10, 10);
