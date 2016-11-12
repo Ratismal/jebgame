@@ -221,10 +221,8 @@ function gameOver() {
 }
 
 function keyDownHandler(e) {
-    console.log(e.keyCode);
     if (e.keyCode == konami[konamiIndex]) {
         konamiIndex++;
-        console.log('konami is now at ', konamiIndex)
     } else konamiIndex = 0;
 
     if (konamiIndex == konami.length) {
