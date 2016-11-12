@@ -52,7 +52,8 @@ var bufferList;
 
 var Buffers = {
     OUCH: 0,
-    BOOP: 1
+    BOOP: 1,
+    TADA: 2
 }
 
 function update() {
@@ -228,7 +229,7 @@ function keyDownHandler(e) {
 
     if (konamiIndex == konami.length) {
         godMode = !godMode;
-        playSound(Buffers.BOOP, 0);
+        playSound(Buffers.TADA, 0);
     }
     if (e.keyCode == 13 && !isStarted) {
         isStarted = true;
@@ -376,8 +377,9 @@ function initAudio() {
 
     bufferLoader = new BufferLoader(
         context, [
-            'music/ouch.ogg',
-            'music/boop.ogg',
+            'sfx/ouch.ogg',
+            'sfx/boop.ogg',
+            'sfx/tada.ogg'
         ],
         finishedLoading
     );
