@@ -131,6 +131,9 @@ function draw() {
     if (debugMode) {
         ctx.fillText('Rhinos In Existence: ' + entities.length, 5, 250)
         ctx.fillText('Timer: ' + timer, 5, 300)
+        ctx.fillText('Rhino Spawn Rate: ' + ((rhinoSpawnRate + (timer / 5000))).toFixed(2), 5, 350)
+        ctx.fillText('Enemy Spawn Rate: ' + ((enemySpawnRate + (timer / 4000))).toFixed(2), 5, 400)
+        
     };
 }
 
@@ -221,7 +224,6 @@ function gameOver() {
 }
 
 function keyDownHandler(e) {
-    console.log(e.keyCode)
     if (konamiIndex == konami.length) {
         switch (e.keyCode) {
             case 13:
