@@ -22,6 +22,7 @@ var ouchCount = 0;
 var isStarted = false;
 
 function update() {
+    if (lives > 3) lives = 0;
     timer++;
     if (ouchCount > 0) ouchCount--;
 
