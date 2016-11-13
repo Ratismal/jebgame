@@ -33,7 +33,7 @@ const konami = [38, 38, 40, 40, 37, 39, 37, 39, 66, 65];
 var konamiIndex = 0;
 
 var music = [{
-    name: 'Brain Power - NOMA',
+    name: 'Brain Power',
     artist: 'NOMA',
     url: 'music/brainpower.mp3'
 }, {
@@ -48,6 +48,10 @@ var music = [{
     name: 'Never Gonna Give You Up',
     artist: 'Rick Astley',
     url: 'music/rolls.mp3'
+}, {
+    name: 'It\'s The Nutshack',
+    artist: 'Nump',
+    url: 'music/nutshack.mp3'
 }]
 
 var sfx = {
@@ -134,8 +138,8 @@ function draw() {
     ctx.font = "30px Comic Sans MS";
     ctx.fillText(music[currentSong].artist, 347, 140);
 
-    ctx.font = "50px Comic Sans MS";  
-    
+    ctx.font = "50px Comic Sans MS";
+
     ctx.fillText('Survived for ' + (Math.floor(moment.duration(moment() - startTime).asSeconds() * 10) / 10) + 's', 5, 200);
     if (godMode) {
         ctx.fillStyle = 'red';
@@ -148,7 +152,7 @@ function draw() {
         ctx.fillText('Timer: ' + timer, 5, 350)
         ctx.fillText('Rhino Spawn Rate: ' + ((rhinoSpawnRate + (timer / 5000))).toFixed(2), 5, 400)
         ctx.fillText('Enemy Spawn Rate: ' + ((enemySpawnRate + (timer / 4000))).toFixed(2), 5, 450)
-        
+
     };
 }
 
@@ -233,6 +237,9 @@ function gameOver() {
         ctx.fillText('It looks like you weren\'t enerJEBic enough.', 40, 100)
         ctx.fillText('Press \'enter\' to try again.', 40, 200);
 
+        ctx.fillText('Total Rhinos: ' + rhinoCount, 40, 300);
+        ctx.fillText('Survived for ' + (Math.floor(moment.duration(moment() - startTime).asSeconds() * 10) / 10) + 's', 40, 350);
+
         isStarted = false;
     }, 1000)
 
@@ -247,7 +254,7 @@ function keyDownHandler(e) {
                 break;
             case 27:
                 debugMode = !debugMode;
-                playSound(Buffers.TADA, 0);                
+                playSound(Buffers.TADA, 0);
                 break;
         }
 
